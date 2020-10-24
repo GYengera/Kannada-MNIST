@@ -8,10 +8,11 @@ from sklearn.metrics import confusion_matrix
 
 
 def plot_graph(curve, name, save_path):
+    plt.figure()
     plt.plot(curve, 'b')
     plt.xlabel('epochs')
     plt.ylabel(name)
-    plt.savefig(save_path, bbox_inches='tight')
+    plt.savefig(save_path, dpi=200, bbox_inches='tight')
     return
 
 
@@ -22,7 +23,7 @@ def plot_confusion_matrix(matrix, save_path):
     ax.set_xticks(np.arange(10))
     ax.set_yticks(np.arange(10))
     fig.colorbar(cax)
-    plt.savefig(save_path, bbox_inches='tight')
+    plt.savefig(save_path, dpi=200, bbox_inches='tight')
     return
 
 
