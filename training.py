@@ -38,7 +38,7 @@ def train_network(net, device, train_csv, val_csv, model_path):
     @brief: Procedure to train and save neural network model.
     """
     #training hyperparameters
-    lr = 0.001
+    lr = 0.0001
     batch_size = 100
     max_epochs = 10
 
@@ -53,7 +53,7 @@ def train_network(net, device, train_csv, val_csv, model_path):
     #train and save model with early stopping.
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(net.parameters(), lr=lr)
-    scheduler = optim.lr_scheduler.StepLR(optimizer, 4, gamma=0.01)
+    scheduler = optim.lr_scheduler.StepLR(optimizer, 4, gamma=0.1)
     #tracking training loss+accuracy and validation accuracy.
     train_accuracy_curve = list()
     loss_curve = list()
@@ -112,7 +112,7 @@ def train_network(net, device, train_csv, val_csv, model_path):
                 best_predictions = predictions.cpu().numpy()
                 torch.save(net.state_dict(), os.path.join(model_path, "model.ckpt"))
 
-        print('Validation accuracy is: {} %'.format(100 * val_accuracy))
+        print('Validation accuracy is: {:.4f} %'.format(100 * val_accuracy))
         #Decay learning rate as defined by the scheduler.
         scheduler.step()
 

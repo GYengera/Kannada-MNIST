@@ -19,7 +19,7 @@ def test_network(net, device, test_csv, model_path, sample_output, output_file):
     test_data = DataLoader(test_set, batch_size=1, shuffle=False)
 
     net.eval()
-    predictions = torch.LongTensor().to(device) #Tensor to save model predictions.
+    predictions = torch.LongTensor().to(device) #Tensor to store model predictions.
     with torch.no_grad():
         for images in test_data:
             images = images.to(device)
