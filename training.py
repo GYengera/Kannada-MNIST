@@ -117,5 +117,5 @@ def train_network(net, device, train_csv, val_csv, model_path):
     plot_graph(val_accuracy_curve, 'validation accuracy', os.path.join(model_path, "validation_accuracy_graph.png"))
 
     #Plot the confusion matrix on validation set
-    plot_confusion_matrix(confusion_matrix(np.array(val_labels), predictions), os.path.join(model_path, "confusion_matrix.png"))
+    plot_confusion_matrix(confusion_matrix(np.array(val_labels), predictions.cpu().numpy()), os.path.join(model_path, "confusion_matrix.png"))
     return
