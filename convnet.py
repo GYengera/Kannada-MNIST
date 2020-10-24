@@ -20,7 +20,7 @@ class network(nn.Module):
         self.conv3_3 = nn.Conv2d(in_channels=256, out_channels=256, kernel_size=3, padding=1)
         self.conv3_3_bn = nn.BatchNorm2d(num_features=256)
 
-        self.drop1 = nn.Dropout(p=0.2)
+        # self.drop1 = nn.Dropout(p=0.2)
         
         self.fc1 = nn.Linear(in_features=512*6*6, out_features=1024)
         self.fc1_bn = nn.BatchNorm1d(num_features=1024)
@@ -31,7 +31,7 @@ class network(nn.Module):
         self.fc3 = nn.Linear(in_features=512, out_features=128)
         self.fc3_bn = nn.BatchNorm1d(num_features=128)
 
-        self.drop2 = nn.Dropout(p=0.2)
+        # self.drop2 = nn.Dropout(p=0.2)
 
         self.out = nn.Linear(in_features=128, out_features=10)
 
@@ -49,11 +49,11 @@ class network(nn.Module):
         x_3 = F.relu(self.conv3_3_bn(self.conv3_3(x)))
         x = F.max_pool2d(torch.cat((x_5, x_3), dim=1), kernel_size=2, stride=1) #(512, 6, 6)
 
-        x = self.drop1(x)
+        # x = self.drop1(x)
         x = F.relu(self.fc1_bn(self.fc1(x.view(-1, 6*6*512))))
         x = F.relu(self.fc2_bn(self.fc2(x)))
         x = F.relu(self.fc3_bn(self.fc3(x)))
-        x = self.drop2(x)        
+        # x = self.drop2(x)        
 
         x = self.out(x)
 
