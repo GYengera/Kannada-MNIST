@@ -20,7 +20,7 @@ def main():
     #selects gpu if available, otherwise runs on the cpu.
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     net = network().to(device)
-    
+
     if not os.path.exists(args.model_path):
         os.mkdir(args.model_path)
 

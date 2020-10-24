@@ -1,5 +1,4 @@
 from dataset import *
-# import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
@@ -17,7 +16,12 @@ def plot_graph(curve, name, save_path):
 
 
 def plot_confusion_matrix(matrix, save_path):
-    plt.matshow(matrix)
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    cax = ax.matshow(matrix)
+    ax.set_xticks(np.arange(10))
+    ax.set_yticks(np.arange(10))
+    fig.colorbar(cax)
     plt.savefig(save_path, bbox_inches='tight')
     return
 
@@ -54,8 +58,8 @@ def train_network(net, device, train_csv, val_csv, model_path):
 
         net.train()
         for i, (images, labels) in enumerate(train_data):
-            images.to(device)
-            labels.to(device)
+            images = images.to(device)
+            labels = labels.to(device)
 
             optimizer.zero_grad()
             outputs = net(images)
@@ -67,11 +71,11 @@ def train_network(net, device, train_csv, val_csv, model_path):
             epoch_accuracy += (predicted==labels).sum().item()
             epoch_loss += loss.item()
 
-            if (i+1) % 1000 == 0:
-                print ('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}'.format(epoch+1, num_epochs, i+1, len(train_set), loss.item()))
+            if (i+1) % 100 == 0:
+                print ('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}'.format(epoch+1, max_epochs, i+1, len(train_set)//batch_size, loss.item()))
 
         epoch_accuracy /= len(train_set)
-        train_accuracy_curve.append(epoch_accuracy)
+        train_accuracy_curve.append(100*epoch_accuracy)
         loss_curve.append(epoch_loss)
 
         net.eval()
@@ -80,8 +84,8 @@ def train_network(net, device, train_csv, val_csv, model_path):
             predictions = torch.LongTensor().to(device)
 
             for images, labels in val_data:
-                images.to(device)
-                labels.to(device)
+                images = images.to(device)
+                labels = labels.to(device)
 
                 outputs = net(images)
                 _, predicted = torch.max(outputs, 1)
@@ -89,7 +93,7 @@ def train_network(net, device, train_csv, val_csv, model_path):
                 predictions = torch.cat((predictions, outputs.argmax(dim=1)), dim=0)
 
             val_accuracy /= len(val_set)
-            val_accuracy_curve.append(val_accuracy)
+            val_accuracy_curve.append(100*val_accuracy)
 
             if (val_accuracy > best_val_accuracy):
                 best_val_accuracy = val_accuracy

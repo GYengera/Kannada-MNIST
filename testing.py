@@ -1,7 +1,5 @@
-# import torch
 from dataset import *
 from torch.utils.data import DataLoader
-# import pandas as pd
 import os
 
 
@@ -24,7 +22,7 @@ def test_network(net, device, test_csv, model_path, sample_output, output_file):
     predictions = torch.LongTensor().to(device)
     with torch.no_grad():
         for images in test_data:
-            images.to(device)
+            images = images.to(device)
 
             outputs = net(images)
             predictions = torch.cat((predictions, outputs.argmax(dim=1)), dim=0)
