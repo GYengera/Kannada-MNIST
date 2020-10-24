@@ -58,8 +58,6 @@ def train_network(net, device, train_csv, val_csv, model_path):
     train_accuracy_curve = list()
     loss_curve = list()
     val_accuracy_curve = list()
-    #best validation accuracy is used for early stopping.
-    best_val_accuracy = 0.
 
     for epoch in range(max_epochs):
         epoch_loss = 0.
@@ -107,20 +105,17 @@ def train_network(net, device, train_csv, val_csv, model_path):
             val_accuracy /= len(val_set)
             val_accuracy_curve.append(100*val_accuracy)
 
-            if (val_accuracy > best_val_accuracy): #save best performing model on validation set.
-                best_val_accuracy = val_accuracy
-                best_predictions = predictions.cpu().numpy()
-                torch.save(net.state_dict(), os.path.join(model_path, "model.ckpt"))
-
         print('Validation accuracy is: {:.4f} %'.format(100 * val_accuracy))
         #Decay learning rate as defined by the scheduler.
         scheduler.step()
 
+    #Save network weights.
+    torch.save(net.state_dict(), os.path.join(model_path, "model.ckpt"))
     #Plot training and validation curves
     plot_graph(train_accuracy_curve, 'training accuracy', os.path.join(model_path, "training_accuracy_graph.png"))
     plot_graph(loss_curve, 'training loss', os.path.join(model_path, "training_loss_graph.png"))
     plot_graph(val_accuracy_curve, 'validation accuracy', os.path.join(model_path, "validation_accuracy_graph.png"))
 
     #Plot the confusion matrix on validation set
-    plot_confusion_matrix(confusion_matrix(np.array(val_labels), best_predictions), os.path.join(model_path, "confusion_matrix.png"))
+    plot_confusion_matrix(confusion_matrix(np.array(val_labels), predictions), os.path.join(model_path, "confusion_matrix.png"))
     return
