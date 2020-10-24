@@ -8,6 +8,9 @@ from sklearn.metrics import confusion_matrix
 
 
 def plot_graph(curve, name, save_path):
+    """
+    @brief: Function to plot a curve.
+    """
     plt.figure()
     plt.plot(curve, 'b')
     plt.xlabel('epochs')
@@ -17,6 +20,9 @@ def plot_graph(curve, name, save_path):
 
 
 def plot_confusion_matrix(matrix, save_path):
+    """
+    @brief: Function to plot the confusion matrix.
+    """
     fig = plt.figure()
     ax = fig.add_subplot(111)
     cax = ax.matshow(matrix)
@@ -31,26 +37,27 @@ def train_network(net, device, train_csv, val_csv, model_path):
     """
     @brief: Procedure to train and save neural network model.
     """
-    #Reading the Kannada MNIST dataset
-    train_images, train_labels, val_images, val_labels = read_data("train", train_csv, val_csv)
-    train_set = KannadaDataset(train_images, train_labels, train_transforms())
-    val_set = KannadaDataset(val_images, val_labels, test_transforms())
-    print ("Data loaded.")
-
     #training hyperparameters
     lr = 0.001
     batch_size = 100
     max_epochs = 10
 
+    #Reading the Kannada MNIST dataset
+    train_images, train_labels, val_images, val_labels = read_data("train", train_csv, val_csv)
+    train_set = KannadaDataset(train_images, train_labels, train_transforms())
+    val_set = KannadaDataset(val_images, val_labels, test_transforms())
     train_data = DataLoader(train_set, batch_size=batch_size, shuffle=True)
     val_data = DataLoader(val_set, batch_size=batch_size, shuffle=False)
+    print ("Data loaded.")
 
     #train and save model with early stopping.
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(net.parameters(), lr=lr, momentum=0.9)
+    #tracking training loss+accuracy and validation accuracy.
     train_accuracy_curve = list()
     loss_curve = list()
     val_accuracy_curve = list()
+    #best validation accuracy is used for early stopping.
     best_val_accuracy = 0.
 
     for epoch in range(max_epochs):
@@ -62,12 +69,14 @@ def train_network(net, device, train_csv, val_csv, model_path):
             images = images.to(device)
             labels = labels.to(device)
 
+            #backpropagating the loss function.
             optimizer.zero_grad()
             outputs = net(images)
             loss = criterion(outputs, labels)
             loss.backward()
             optimizer.step()
 
+            #compute accuracy and cumulative loss.
             _, predicted = torch.max(outputs, 1)
             epoch_accuracy += (predicted==labels).sum().item()
             epoch_loss += loss.item()
@@ -79,6 +88,7 @@ def train_network(net, device, train_csv, val_csv, model_path):
         train_accuracy_curve.append(100*epoch_accuracy)
         loss_curve.append(epoch_loss)
 
+        #Run network validation.
         net.eval()
         with torch.no_grad():
             val_accuracy = 0.
@@ -96,7 +106,7 @@ def train_network(net, device, train_csv, val_csv, model_path):
             val_accuracy /= len(val_set)
             val_accuracy_curve.append(100*val_accuracy)
 
-            if (val_accuracy > best_val_accuracy):
+            if (val_accuracy > best_val_accuracy): #save best performing model on validation set.
                 best_val_accuracy = val_accuracy
                 best_predictions = predictions.cpu().numpy()
                 torch.save(net.state_dict(), os.path.join(model_path, "model.ckpt"))

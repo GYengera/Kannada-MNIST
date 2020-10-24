@@ -5,14 +5,14 @@ from testing import *
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--train_csv', type=str, default="./train.csv")
-parser.add_argument('--val_csv', type=str, default="./Dig-MNIST.csv")
-parser.add_argument('--test_csv', type=str, default="./test.csv")
-parser.add_argument('--sample_output', type=str, default="./sample_submission.csv")
-parser.add_argument('--output_file', type=str, default="./test_output.csv")
-parser.add_argument('--model_path', type=str, default="./nn_model/")
-parser.add_argument('--train', type=bool, default=True)
-parser.add_argument('--test', type=bool, default=True)
+parser.add_argument('--train_csv', type=str, default="./train.csv", help="Training data csv file")
+parser.add_argument('--val_csv', type=str, default="./Dig-MNIST.csv", help="Validation data csv file")
+parser.add_argument('--test_csv', type=str, default="./test.csv", help="Test data csv file")
+parser.add_argument('--sample_output', type=str, default="./sample_submission.csv", help="Sample submission csv file")
+parser.add_argument('--output_file', type=str, default="./test_output.csv", help="Path to output submission file")
+parser.add_argument('--model_path', type=str, default="./nn_model/", help="Directory where model and plots will be saved")
+parser.add_argument('--train', type=bool, default=True, help="Signals whether to train a neural network")
+parser.add_argument('--test', type=bool, default=True, help="Signals to test our neural network")
 args = parser.parse_args()
 
 
@@ -22,7 +22,7 @@ def main():
     net = network().to(device)
 
     if not os.path.exists(args.model_path):
-        os.mkdir(args.model_path)
+        os.mkdir(args.model_path) #Create directory to save model and plots.
 
     if (args.train):
         print ("Begin Training.")

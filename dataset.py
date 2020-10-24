@@ -28,11 +28,11 @@ def read_data(mode, *files):
 
 def train_transforms():
     """
-    @brief: 
+    @brief: Defines the image transformations for data augmentation during training.
     """
     train_transform = transforms.Compose(([
         transforms.ToPILImage(),
-        transforms.RandomCrop(28),
+        # transforms.RandomCrop(28),
         transforms.RandomAffine(degrees=5, translate=(0.1, 0.1)),
         transforms.ToTensor(), # divides by 255
         ]))
@@ -40,6 +40,9 @@ def train_transforms():
 
 
 def test_transforms():
+    """
+    @brief: Creates required image when evaluating a neural network.
+    """
     test_transform = transforms.Compose(([
         transforms.ToPILImage(),
         transforms.ToTensor(), # divides by 255
@@ -48,6 +51,9 @@ def test_transforms():
 
 
 class KannadaDataset(torch.utils.data.Dataset):
+    """
+    @brief: Defines the dataset class for storing training/val/test data.
+    """
     def __init__(self, images, labels=None, transforms=None):
         self.X = images
         self.y = labels
