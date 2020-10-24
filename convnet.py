@@ -11,9 +11,9 @@ class network(nn.Module):
         self.conv1_3_bn = nn.BatchNorm2d(num_features=32)
 
         self.conv2_5 = nn.Conv2d(in_channels=64, out_channels=128, kernel_size=5, padding=2)
-        self.conv2_5_bn = nn.BatchNorm2d(num_features=64)
+        self.conv2_5_bn = nn.BatchNorm2d(num_features=128)
         self.conv2_3 = nn.Conv2d(in_channels=64, out_channels=128, kernel_size=3, padding=1)
-        self.conv2_3_bn = nn.BatchNorm2d(num_features=64)
+        self.conv2_3_bn = nn.BatchNorm2d(num_features=128)
 
         self.conv3_5 = nn.Conv2d(in_channels=256, out_channels=256, kernel_size=5, padding=2)
         self.conv3_5_bn = nn.BatchNorm2d(num_features=256)
