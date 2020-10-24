@@ -6,7 +6,7 @@ import torch.nn.functional as F
 
 class network(nn.Module):
     def __init__(self):
-        super(Network, self).__init__()
+        super(network, self).__init__()
         # image starts as (1, 28, 28)
         self.conv1 = nn.Conv2d(in_channels=1, out_channels=32, kernel_size=5, stride=1, padding=2) # conv1
         self.conv1_bn = nn.BatchNorm2d(num_features=32)
