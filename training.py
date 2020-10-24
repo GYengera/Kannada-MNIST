@@ -52,7 +52,8 @@ def train_network(net, device, train_csv, val_csv, model_path):
 
     #train and save model with early stopping.
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.SGD(net.parameters(), lr=lr, momentum=0.9)
+    optimizer = optim.Adam(net.parameters(), lr=lr)
+    scheduler = optim.lr_scheduler.StepLR(optimizer, 4, gamma=0.01)
     #tracking training loss+accuracy and validation accuracy.
     train_accuracy_curve = list()
     loss_curve = list()
@@ -112,6 +113,8 @@ def train_network(net, device, train_csv, val_csv, model_path):
                 torch.save(net.state_dict(), os.path.join(model_path, "model.ckpt"))
 
         print('Validation accuracy is: {} %'.format(100 * val_accuracy))
+        #Decay learning rate as defined by the scheduler.
+        scheduler.step()
 
     #Plot training and validation curves
     plot_graph(train_accuracy_curve, 'training accuracy', os.path.join(model_path, "training_accuracy_graph.png"))
