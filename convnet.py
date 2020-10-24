@@ -39,15 +39,15 @@ class network(nn.Module):
     def forward(self, x):
         x_5 = F.relu(self.conv1_5_bn(self.conv1_5(x))) #(32, 28, 28)
         x_3 = F.relu(self.conv1_3_bn(self.conv1_3(x))) #(32, 28, 28)
-        x = F.max_pool2d(torch.cat((x_5, x_3), dim=0), kernel_size=2, stride=2) #(64, 14, 14)
+        x = F.max_pool2d(torch.cat((x_5, x_3), dim=1), kernel_size=2, stride=2) #(64, 14, 14)
 
         x_5 = F.relu(self.conv2_5_bn(self.conv2_5(x))) #()
         x_3 = F.relu(self.conv2_3_bn(self.conv2_3(x)))
-        x = F.max_pool2d(torch.cat((x_5, x_3), dim=0), kernel_size=2, stride=2) #(256, 7, 7)
+        x = F.max_pool2d(torch.cat((x_5, x_3), dim=1), kernel_size=2, stride=2) #(256, 7, 7)
 
         x_5 = F.relu(self.conv3_5_bn(self.conv3_5(x)))
         x_3 = F.relu(self.conv3_3_bn(self.conv3_3(x)))
-        x = F.max_pool2d(torch.cat((x_5, x_3), dim=0), kernel_size=2, stride=1) #(512, 6, 6)
+        x = F.max_pool2d(torch.cat((x_5, x_3), dim=1), kernel_size=2, stride=1) #(512, 6, 6)
 
         x = self.drop1(x)
         x = F.relu(self.fc1_bn(self.fc1(x.view(-1, 6*6*512))))
