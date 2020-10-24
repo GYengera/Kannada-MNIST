@@ -5,6 +5,7 @@ import torch.optim as optim
 from torch.utils.data import DataLoader
 import os
 import matplotlib.pyplot as plt
+from sklearn.metrics import confusion_matrix
 
 
 def plot_graph(curve, name, save_path):
