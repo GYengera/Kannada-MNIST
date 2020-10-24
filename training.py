@@ -30,12 +30,12 @@ def train_network(net, device, train_csv, val_csv, model_path):
     train_set = KannadaDataset(train_images, train_labels, train_transforms())
     val_set = KannadaDataset(val_images, val_labels, test_transforms())
     print ("Data loaded.")
-    
+
     #training hyperparameters
     lr = 0.001
     batch_size = 100
-    max_epochs = 1
-    
+    max_epochs = 10
+
     train_data = DataLoader(train_set, batch_size=batch_size, shuffle=True)
     val_data = DataLoader(val_set, batch_size=batch_size, shuffle=False)
 
@@ -76,7 +76,7 @@ def train_network(net, device, train_csv, val_csv, model_path):
         net.eval()
         with torch.no_grad():
             val_accuracy = 0.
-            predictions = torch.LongTensor().to(device) 
+            predictions = torch.LongTensor().to(device)
 
             for images, labels in val_data:
                 images.to(device)
