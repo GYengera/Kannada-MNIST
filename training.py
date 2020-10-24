@@ -38,7 +38,7 @@ def train_network(net, device, train_csv, val_csv, model_path):
     @brief: Procedure to train and save neural network model.
     """
     #training hyperparameters
-    lr = 0.0001
+    lr = 0.001
     batch_size = 100
     max_epochs = 10
 
@@ -52,7 +52,7 @@ def train_network(net, device, train_csv, val_csv, model_path):
 
     #train and save model with early stopping.
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(net.parameters(), lr=lr)
+    optimizer = optim.SGD(net.parameters(), lr=lr, momentum=0.9)
     scheduler = optim.lr_scheduler.StepLR(optimizer, 4, gamma=0.1)
     #tracking training loss+accuracy and validation accuracy.
     train_accuracy_curve = list()

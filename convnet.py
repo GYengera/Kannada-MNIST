@@ -21,9 +21,6 @@ class network(nn.Module):
         self.conv3_3 = nn.Conv2d(in_channels=256, out_channels=256, kernel_size=3, padding=1)
         self.conv3_3_bn = nn.BatchNorm2d(num_features=256)
 
-        # self.conv4 = nn.Conv2d(in_channels=512, out_channels=512, kernel_size=3, padding=1)
-        # self.conv4_bn = nn.BatchNorm2d(num_features=512)
-
         self.drop1 = nn.Dropout(p=0.2)
         
         self.fc1 = nn.Linear(in_features=512*6*6, out_features=512)
@@ -58,7 +55,6 @@ class network(nn.Module):
         x_3 = F.relu(self.conv3_3_bn(self.conv3_3(x))) #(256, 7, 7)
         x = F.max_pool2d(torch.cat((x_5, x_3), dim=1), kernel_size=2, stride=1) #(512, 6, 6)
 
-        # x = self.conv4_bn(self.conv4(x)) #(512, 6, 6)
         x = self.drop1(x)
 
         x = F.relu(self.fc1_bn(self.fc1(x.view(-1, 6*6*512)))) #(512)
